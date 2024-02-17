@@ -12,6 +12,7 @@ on:
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '20.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  ARTIFACT_NAME: 'build-artifact'
 
 jobs:
   build:
@@ -28,12 +29,15 @@ jobs:
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm install
           npm run build --if-present
           npm run test --if-present
           npm run build:production --if-present
-          popd
+      - name: 'Archive Production Build'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/build
   deploy:
     name: deploy
     runs-on: ubuntu-latest
@@ -41,12 +45,16 @@ jobs:
     environment: 
       name: azure
     steps:
+      - name: 'Download Artifact'
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
           app-name: 'umaia-cicd-azure-function'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: ${{ env.ARTIFACT_NAME }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E28C4F3602B4B118542EE2A3DD94A95 }}
           scm-do-build-during-deployment: true
