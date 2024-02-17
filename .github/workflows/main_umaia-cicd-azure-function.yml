@@ -42,7 +42,6 @@ jobs:
       - uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.TOKEN }}
-          approvers: UlissesM
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
