@@ -58,6 +58,6 @@ jobs:
         with:
           app-name: 'umaia-cicd-azure-function'
           slot-name: 'Production'
-          package: ${{ env.ARTIFACT_NAME }}/.
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E28C4F3602B4B118542EE2A3DD94A95 }}
           scm-do-build-during-deployment: false
