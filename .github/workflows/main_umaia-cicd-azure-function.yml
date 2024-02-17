@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/build
+          path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
   deploy:
     name: deploy
     runs-on: ubuntu-latest
