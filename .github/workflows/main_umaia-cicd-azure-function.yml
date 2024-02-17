@@ -49,12 +49,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
+      - name: 'List Contents of the Directory'
+        run: |
+          ls -la
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
           app-name: 'umaia-cicd-azure-function'
           slot-name: 'Production'
-          package: ${{ env.ARTIFACT_NAME }}
+          package: ${{ env.ARTIFACT_NAME }}/.
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E28C4F3602B4B118542EE2A3DD94A95 }}
-          scm-do-build-during-deployment: true
+          scm-do-build-during-deployment: false
